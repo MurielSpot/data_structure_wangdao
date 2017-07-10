@@ -47,7 +47,7 @@ void reverse(SqQueue q,SqStack s){
 /*
 3.2.5，二：3
 */
-//mine，和答案的做法有区别！！！！！
+//mine，和答案的做法有区别！！！！！答案的做法空间利用率比我高！！！！
 bool enQueue(Stack s1,Stack s2,ElemType x){
 	if(stackOverflow(s1))return false;
 	else push(s1,x);
