@@ -1,0 +1,77 @@
+/*
+3.2.5，二：1
+*/
+#define MaxSize 50
+typedef struct{
+	ElemType data[MaxSize];
+	int front,rear,flag;
+}SqQueue;
+
+bool enQueue(SqQueue s,ElemType x){
+	if(s.front==s.rear&&s.flag==1){
+		 printf("full");return false;
+	}
+	data[s.rear]=x;
+	s.rear=(s.rear+1)%MaxSize;
+	//少了对flag处理。
+	s.flag=1;//答案的写法，不需要判断front和rear是否相等，只要增加一个元素，即队列里有元素就可以将flag置为1.
+	return true;
+}
+ElemType deQueue(SqQueue s)}{
+	if(s.front==s.rear&&s.flag==0){
+		printf("empty");return -1;
+	}
+	ElemType x=data[s.front];//不是data[rear]
+	s.front=(s.front+1)%MaxSize;//不是(rear-1)%MaxSize！！！
+	//没有处理flag
+	q.flag=0;//答案的写法，不需要判断front是否相等，再改变flag，只要非满就可以置为0.
+	return x;
+}
+
+/*
+3.2.5，二：2
+*/
+//mine
+void reverse(SqQueue q,SqStack s){
+	while(q.rear!=q.front && s.top!=MaxSize-1){
+		s.data[++s.top]=q.data[q.front];
+		q.front=(q.front+1)%MaxSize;
+	}
+	while(s.top!=-1 && q.rear+1!=q.front){
+		q.data[q.rear]=s.data[s.top--];
+		q.rear=(q.rear+1)%MaxSize;
+	}
+}
+//答案直接用了pop、push、enQueue、deQueue这些基本操作。
+
+/*
+3.2.5，二：3
+*/
+//mine，和答案的做法有区别！！！！！
+bool enQueue(Stack s1,Stack s2,ElemType x){
+	if(stackOverflow(s1))return false;
+	else push(s1,x);
+}
+
+ElemType deQueue(Stack s1,Stack s2,ElemType x){
+	if(stackEmpty(s1))exit(0);
+	while(!stackEmpty(s1) && !stackOverflow(s2)){
+		push(s2,pop(s1));
+	}
+	ElemType x;
+	if(stackEmpty(s1)){
+		x=pop(s2);
+	}else{
+		exit(0);
+	}
+	while(!stackEmpty(s2) && !stackOverflow(s1)){
+		push(s1,pop(s2));
+	}
+	if(stackEmpty(s2))return x;
+	else exit(0);
+}
+
+bool queueEmpty(Stack s1){
+	if(stackEmpty(s1))return true;
+	else return false;
+}
