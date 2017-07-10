@@ -1,0 +1,97 @@
+/*
+3.1.2栈的顺序存储结构
+*/
+#define MaxSize 50
+typedef struct{
+	ElemType data[MaxSize];
+	//top为栈顶指针，初始化为-1。不满时，先加一再送值到栈顶元素。非空时，先取值，再将栈顶指针减一。
+	//栈空条件：top等于-1。栈满条件：top等于MaxSize-1。栈长为：top+1。
+	int top;
+}SqStack;
+/*
+3.1.3栈的链式存储结构
+*/
+typedef struct Linknode{
+	ElemType data;
+	Struct Linknode *next;
+}*LiStack;
+
+/*
+3.1.4，二：3（2）
+*/
+bool judge(char* io[],int size){
+	int flag=-1;
+	int i=0;
+	while(i<size){
+		if(io[i]=='I'){
+			flag++;
+		}else if(io[i]=='O'){
+			flag--;
+			if(flag<-1) return false;
+		}
+		i++;
+	}
+	if(flag==-1)return true;
+	else return false;
+}
+/*
+3.1.4，二：4
+*/
+//mine
+bool centralSymmetric(LinkList l,int n){
+	int i=n/2;
+	while(i--)
+		push(l->data);//要更具体，答案中采用了char数组作为栈，对字符数组进行了处理，而不像我直接写push和pop。
+		l=l->next;
+	}
+	if(n%2!=0){
+		l=l->next;
+	}
+	while(l){
+		if(pop()!=l->data) return false;
+		l=l->next;
+	}
+	return true;//虽然n/2可以将链表折半，但是如果外界给出的n有错，则这个程序就会出错。后面的while循环可能不是扫描了i=n/2个字符，所以增加用i=n/2；i--作为循环终止的条件，l是否为空这个条件仍然保留会有两重保险。具体看这道题的答案。我觉得我这样做也没有问题。
+}
+
+/*
+3.1.4，二：5
+*/
+#define MaxSize 100
+typedef struct{
+	ElemType data[MaxSize];
+	int top[2];//存两个指针，我没有想到。。。。
+}shareSTK;
+
+//答案在一个函数里处理了两个栈，所以函数开头需要判断了给的栈号对不对。
+bool pushS1(SqStack ss,ElemType x){
+	if(top[1]-top[0]==1)return false;
+	top[0]++;
+	data[top[0]]=x;
+	return true;
+}
+bool pushS2(SqStack ss,ElemType x){
+	if(top[1]-top[0]==1)return false;
+	top[1]--;
+	data[top[1]]=x;
+	return true;
+}
+ElemType popS1(SqStack ss){
+	if(top[0]==-1){
+		printf("empty!");
+		exit(0);
+	}
+	ElemType data=data[top[0]];//这里写的比答案啰嗦，而且还多用了一个变量！！！！
+	top[0]--;
+	return data;
+	
+}
+ElemType popS2(SqStack ss){
+	if(top[1]==MaxSize){
+		printf("empty!");
+		exit(0);
+	}
+	ElemType data=data[top[1]];
+	top[1]++;
+	return data;
+}
