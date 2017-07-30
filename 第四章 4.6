@@ -1,0 +1,54 @@
+/*
+4.4.6，二：5
+编程求以孩子兄弟表示法存储的森林的叶子结点数。
+*/
+typedef struct node{
+	ElemType data;
+	struct node *fch,*nsib;
+}Tree;
+int leaves(Tree *t){
+	if(t==NULL)return 0;
+	else{
+		if(t->fch==NULL){
+			return 1+leaves(t->nsib);
+		}else{
+			return leaves(t->fch)+leaves(t->nsib);
+		}
+	}
+}
+
+/*
+4.4.6，二：6
+以孩子兄弟链表为存储结构，请设计递归算法求树的深度。
+*/
+typedef struct node{
+	ElemType data;
+	struct node *fch,*nsib;
+}Tree;
+int height(Tree *t){
+	int hc,hs;
+	if(t==NULL){
+		return 0;
+	}else{
+		hc=height(t->fch);
+		hs=height(t->nsib);
+/*注释里的做法是有问题的
+		if(hc>hs){
+			return hc+1;
+		}else{
+			return hs+1;
+		}
+*/
+//应取子女高度加1和兄弟子树中大的那一个
+		if(hc+1>hs){
+			return hc+1;
+		}else{
+			return hs;
+		}
+	}
+}
+
+/*
+4.4.6，二：7
+已知一棵树的层次序列以及每个结点的度，编写一个算法构造此树的孩子-兄弟链表。
+*/
