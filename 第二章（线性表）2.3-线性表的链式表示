@@ -255,3 +255,134 @@ void delMin(LinkList l){
 		print(l);
 	}
 }
+
+/*
+2.3.7，二：10
+将带头结点的单链表A，分解为两个带头结点的单链表A和B，使得A含有原表中序号为奇数的元素，B中含有原表中序号为偶数的元素。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+linkList* decompose(linkList* a){
+	//原链表a，分解后的a仍存在a中，b另外新建，函数返回的是b
+	if(a==NULL){
+		return NULL;
+	}
+	listNode* ahead=a;
+	
+	listNode* bhead=new listNode;
+	listNode* b=bhead;
+	b->next=NULL;
+	while(a->next){
+		a=a->next;
+		if(a->next){
+			b->next=a->next;
+			b=b->next;
+			a->next=b->next;
+			b->next=NULL;
+		}
+	}
+	return bhead;
+}
+int main(){
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	int i=0;
+	while(i<10){
+		a->next=new listNode;
+		a=a->next;
+		a->data=20-i;
+		a->next=NULL;
+		i++;
+	}
+	
+	linkList *bhead,*b=decompose(ahead);
+	
+	a=ahead->next;
+	while(a){
+		printf("%d,",a->data);
+		a=a->next;
+	}
+	
+	printf("\n");
+	bhead=b;
+	b=bhead->next;
+	while(b){
+		printf("%d,",b->data);
+		b=b->next;
+	}
+	return 0;
+}
+
+/*
+2.3.7，二：11
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+linkList* decompose(linkList* a){
+	//原链表a，分解后的a仍存在a中，b另外新建，函数返回的是b
+	if(a==NULL){
+		return NULL;
+	}
+	listNode* ahead=a;
+	
+	listNode* bhead=new listNode;
+	bhead->next=NULL;
+	
+	listNode* tmp;
+	while(a->next){
+		a=a->next;
+		if(a->next){
+			tmp=a->next;
+			a->next=a->next->next;
+			tmp->next=bhead->next;
+			bhead->next=tmp;
+		}
+	}
+	return bhead;
+}
+int main(){
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	int i=0;
+	while(i<9){
+		a->next=new listNode;
+		a=a->next;
+		a->data=20-i;
+		a->next=NULL;
+		i++;
+	}
+	
+	linkList *bhead,*b=decompose(ahead);
+	
+	a=ahead->next;
+	while(a){
+		printf("%d,",a->data);
+		a=a->next;
+	}
+	
+	printf("\n");
+	bhead=b;
+	b=bhead->next;
+	while(b){
+		printf("%d,",b->data);
+		b=b->next;
+	}
+	return 0;
+}
+
