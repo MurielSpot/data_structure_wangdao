@@ -386,3 +386,62 @@ int main(){
 	return 0;
 }
 
+/*
+2.3.7，二：12
+递增有序线性表，存储方式为单链表，去掉相同元素，使表中不再有重复元素。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+void del_Same(linkList *ahead){
+	//原链表a，分解后的a仍存在a中，b另外新建，函数返回的是b
+	if(ahead==NULL){
+		return;
+	}
+	listNode* a=ahead->next;
+	listNode *tmp,*pre=ahead;
+	while(a&&a->next){
+		if(a->data==a->next->data){
+			tmp=a;
+			pre->next=a->next;
+			delete tmp;
+			a=pre->next;
+		}else{
+			pre=a;
+			a=a->next;
+		}
+	}
+}
+int main(){
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	int i=0;
+	while(i<9){
+		a->next=new listNode;
+		a=a->next;
+		if(i==0||i==6){
+			a->data=10;
+		}else a->data=20;
+		a->next=NULL;
+		i++;
+	}
+	
+	del_Same(ahead);
+	
+	a=ahead->next;
+	while(a){
+		printf("%d,",a->data);
+		a=a->next;
+	}
+	
+	printf("\n");
+	return 0;
+}
+
