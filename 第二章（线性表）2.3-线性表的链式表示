@@ -1,0 +1,257 @@
+typedef struct LNode{
+	ElemType data;
+	struct LNode* next;
+}LNode,*LinkList;
+
+/*
+2.3.7，二：1
+设计一个递归算法，删除不带头结点的单链表L中的所有值为x的结点。
+*/
+void Del_X_3(LinkList &l,ElemType x){
+	LNode* p;
+	if(l==NULL){
+		return;
+	}
+	if(l->data==x){
+		p=l;
+		l=l->next;
+		free(p);
+		Del_X_3(l,x);
+	}else{
+		Del_X_3(l,x);
+	}
+}
+
+/*
+2.3.7，二：2
+带头结点，L，删除所有x
+*/
+//mine：这种写法应该是错的，因为l的值在程序中被更改了。
+void del2(LinkList &l,ElemType x){
+	LNode* p;
+	while(l->next!=NULL){
+		if(l->next->data==x){
+			p=l->next;
+			l->next=p->next;
+			free(p);
+		}
+		l=l->next;
+	}
+}
+/*
+2.3.7，二：3
+*/
+//mine：有错误
+void reverseprint(LinkList &l){
+	if(l->next){
+		reverseprint(l->next);
+		printf("%d",l->data);//这一步应该放在if外面，因为放在里面则最后一个结点打印不出来。因为最后一个结点的下一个结点为null，所以这个if不成立，data就答应不出来了。
+		//所以要注意到，最后结束的时候处理的是最后一个结点的信息，当l->next==NULL时，if里的reverseprint是不会执行的，即不会传给函数一个值为null的指针。
+	}
+}
+/*
+2.3.7，二：4
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int ElemType;
+
+typedef struct LNode{
+	ElemType data;
+	struct LNode* next;
+}LNode,*LinkList;
+
+void init(LinkList &head){
+	head=(LinkList)malloc(sizeof(LNode));
+	head->next=NULL;
+	printf("how many elements:");
+	int n;
+	scanf("%d",&n);
+	head->data=n;
+	LNode* p=head;
+	while(n--){
+		p->next=(LinkList)malloc(sizeof(LNode));
+		p=p->next;
+		p->next=NULL;
+		printf("data%d:",head->data-n);
+		scanf("%d",&(p->data));
+	}
+}
+
+void print(LinkList p){
+	while(p->next){
+		p=p->next;
+		printf("%d, ",p->data);
+	}
+	printf("\n");
+}
+//下面这个函数时错的，因为l里存的是头结点，l相当于一个盒子，l的值是头结点所存位置的地址号。
+//所以l赋给pre后，修改pre的值也就是修改了l存的值。所以程序的整个逻辑都是错的。
+//刚刚查到了&m=n，即表示m就是n的别名。所以程序中l就是外部head的别名。
+void delminwrong(LinkList &l){
+	LNode *pre=l,*p=l;
+	ElemType min;
+
+	if(l->next) min=l->data;
+	else return;
+
+	while(p->next){
+		if(p->next->data<min){
+			pre=p;
+			p=p->next;
+			min=p->data;
+		}else{
+			p=p->next;
+		}
+	}
+	p=pre->next;
+	pre->next=p->next;//注意第一个元素为最小值时，删除的是第一个结点，所以pre一开始要初始化为l。
+	free(p);
+}
+
+//目前下面的函数没有问题
+void delmin(LinkList l){
+	LNode *pre=l,*p=l;
+	ElemType min;
+
+	if(l->next) min=l->next->data;
+	else return;
+
+	while(p->next){
+		if(p->next->data<min){
+			pre=p;
+			p=p->next;
+			min=p->data;
+		}else{
+			p=p->next;
+		}
+	}
+	p=pre->next;
+	pre->next=p->next;//注意第一个元素为最小值时，删除的是第一个结点，所以pre一开始要初始化为l。
+	free(p);
+}
+
+int main(){
+	LinkList head;
+	init(head);
+	print(head);
+	
+	delmin(head);print(head);
+	delmin(head);print(head);
+	delmin(head);print(head);
+	delmin(head);print(head);
+	delmin(head);print(head);
+	delmin(head);print(head);
+	return 0;
+}
+
+/*
+2.3.7，二：5
+*/
+void reverselist(LinkList l){
+	LNode *t,*first;
+	if(l->next&&l->next->next){
+		t=l->next->next;0
+		l->next->next=NULL;
+	}else return;
+	while(t){
+		first=l->next;
+		l->next=t;
+		t=t->next;
+		l->next->next=first;
+	}
+}
+/*
+2.3.7，二：6
+*/
+void sort(LinkList &l){
+	LinkList newhead=(LinkList)malloc(sizeof(LNode));
+	newhead->next=NULL;
+	LNode *p;
+	LNode *preNew,*pNew;
+	while(l->next){
+		p=l->next;
+		l->next=p->next;
+		preNew=newhead,pNew=newhead->next;
+		while(pNew && p->data>pNew->data){
+			preNew=pNew;
+			pNew=pNew->next;
+		}
+		preNew->next=p;
+		preNew->next->next=pNew;
+	}
+	l->next=newhead->next;
+	free(newhead);
+}
+/*
+2.3.7，二：7
+*/
+//mine
+void dela2b(LinkList l,ElemType a,ElemType b){
+	LNode *pre=l,*q=l->next;
+	while(q){
+		if(q->data>a&&q->data<b){
+			pre->next=q->next;
+			free(q);
+		}else{
+			pre=pre->next;
+		}
+		q=pre->next;
+	}
+}
+/*
+2.3.7，二：8
+给定两个单链表，编写算法找出两个链表的公共结点。
+*/
+//答案
+LinkList searchLstCommon(LinkList L1,LinkList L2){
+	int len1=Length(L1),len2=Length(L2);
+	LinkList longList,shortList;
+	int dist;
+	if(len1>len2){
+		longList=L1->next;
+		shortList=L2->next;
+		dist=len2-len1;
+	}else{
+		longList=L2->next;
+		shortList=L1->next;
+		dist=len1-len2;
+	}
+	while(dist--){
+		longList=longList->next;
+	}
+	while(longList){
+		if(longList==shortList){
+			return longList;
+		}else{
+			longList=longList->next;
+			shortList=shortList->next;
+		}
+	}
+}
+/*
+2.3.7，二：9
+给定一个带表头结点的单链表，设head为头指针，结点的结构为（data，next），data为整形元素，next为指针，试写出算法：按递增次序输出单链表中各结点的数据元素，并释放结点所占的存储空间。（要求：不允许使用数组作为辅助空间。）
+*/
+//mine，有错误，没有释放头结点！！！！！！！！！！
+void delMin(LinkList l){
+	LNode *pre=l,*p=l->next,*minPre;
+	ElemType min;
+	while(l->next){
+		minPre=pre=l;p=l->next;//minPre每次重新循环是都要重新赋值，因为下面的if条件不一定能进入，没有进入if且没有重新初始化minPre的值是一个废值。
+		min=l->next->data;//注意min在后面的循环之前每次都要重新初始化，不然存的就是之前取的最小值了。
+		while(p){
+			if(p->data<min){
+				min=p->data;
+				minPre=pre;
+			}
+			pre=p;
+			p=pre->next;
+		}
+		p=minPre->next;
+		minPre->next=p->next;
+		free(p);
+		print(l);
+	}
+}
