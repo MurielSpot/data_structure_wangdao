@@ -620,3 +620,114 @@ int main(){
 	return 0;
 }
 
+/*
+2.3.7，二：15
+两个递增的单链表a，b，求两者交集，存放在a中。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+
+void common(linkList *a,linkList* b){
+	//a保留，b销毁
+	listNode *ahead,*bhead,*tmp;
+	if(a&&b){
+		ahead=a->next;
+		a->next=NULL;
+		bhead=b->next;
+		delete b;
+	}else if(a){
+		//只有a存在，清除a中元素。
+		ahead=a->next;
+		while(ahead){
+			tmp=ahead;
+			ahead=ahead->next;
+			delete tmp;
+		}
+	}else if(b){
+		//只有b存在，销毁b
+		while(b){
+			tmp=b;
+			b=b->next;
+			delete tmp;
+		}
+	}
+	
+	//b头结点已销毁。数据存在a中，a已置空，ahead,bhead分别为原a,b链表的工作结点。
+	while(ahead&&bhead){
+		if(ahead->data == bhead->data){
+			//删除原b中一个结点，bhead指向下一个结点
+			tmp=bhead;
+			bhead=bhead->next;
+			delete tmp;
+			//原a中的结点连入新a中（头插），ahead指向下一结点
+			tmp=ahead;
+			ahead=ahead->next;
+			tmp->next=a->next;
+			a->next=tmp;
+		}else if(ahead->data < bhead->data){
+			tmp=ahead;
+			ahead=ahead->next;
+			delete tmp;
+		}else{
+			tmp=bhead;
+			bhead=bhead->next;
+			delete tmp;
+		}
+	}
+	while(ahead){
+		tmp=ahead;
+		ahead=ahead->next;
+		delete tmp;
+	}
+	while(bhead){
+		tmp=bhead;
+		bhead=bhead->next;
+		delete tmp;
+	}
+}
+int main(){
+	int arr1[10]={1,3,7,8,10,22,100,245};
+	int arr2[10]={3,4,8,9,33,100,245};
+	
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	
+	linkList* b=new listNode;
+	linkList* bhead=b;
+	b->next=NULL;
+	
+	int i=0;
+	while(i<8){
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+	i=0;
+	while(i<7){
+		b->next=new listNode;
+		b=b->next;
+		b->data=arr2[i];
+		b->next=NULL;
+		i++;
+	}
+	
+	common(ahead,bhead);
+	
+	printf("a:");
+	a=ahead->next;
+	while(a){
+		printf("%d,",a->data);
+		a=a->next;
+	}
+	return 0;
+}
