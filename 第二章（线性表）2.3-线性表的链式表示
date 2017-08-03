@@ -731,3 +731,83 @@ int main(){
 	}
 	return 0;
 }
+
+/*
+2.3.7，二：15
+两个递增的单链表a，b，求两者交集，存放在a中。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+
+bool subsequence(linkList *ahead,linkList* bhead){
+	listNode *a=ahead->next,*b=bhead->next,*anext=ahead->next;
+	while(a&&b){
+		while(a->data!=b->data){
+			//如果a当前结点的值与b第一个结点的值不相等，a继续寻找下一个结点。
+			a=a->next;
+			if(!a){
+				return false;
+			}
+		}
+		//a当前结点和b的第一个结点值相等，则依次比较之后的结点是否相同
+		anext=a->next;
+		while(a->data==b->data){
+			a=a->next;
+			b=b->next;
+			if(!a&&b){//如果a结束了b却没结束，说明b不是a的子串。
+				return false;
+			}else if(!b){//如果b结束了，不管a结束或没结束，b都是a的子串。
+				return true;
+			}
+		}
+		//a和b都没结束，就要继续从头比较a与b相等时a的下一个元素和b的第一位的元素是否相等。
+		a=anext;
+		b=bhead->next;
+	}
+	return false;
+}
+int main(){
+	int arr1[10]={3,7,8,11,10,23,21,22,100,245};
+	int arr2[10]={3,7,8,10};
+	
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	
+	linkList* b=new listNode;
+	linkList* bhead=b;
+	b->next=NULL;
+	
+	int i=0;
+	while(i<8){
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+	i=0;
+	while(i<4){
+		b->next=new listNode;
+		b=b->next;
+		b->data=arr2[i];
+		b->next=NULL;
+		i++;
+	}
+	
+	if(subsequence(ahead,bhead)){
+		printf("YES");
+	}else{
+		printf("NO");
+	}
+	
+	return 0;
+}
+
