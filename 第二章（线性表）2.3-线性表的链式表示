@@ -811,3 +811,27 @@ int main(){
 	return 0;
 }
 
+/*
+2.3.7，二：17
+判断带头结点的循环双链表是否对称。
+*/
+//注意：有头结点时，循环链表为空时prior和next都指向头结点。循环链表非空时，最后一个元素next指向头结点，第一个元素prior指向头结点。
+struct DlinkList{
+	int data;
+	struct DlinkList *prior;
+	struct DlinkList *next;
+};
+bool symmetry(DlinkList l){
+	//头结点的next和prior分别指向第一个结点和最后一个结点。
+	DlinkList *p=l.next,*q.prior;
+	while(p!=q&&p->prior!=q){
+		if(p->data!=q->data){
+			return false;
+		}else{
+			p=p->next;
+			q=q->prior;
+		}
+	}
+	return true;
+}
+
