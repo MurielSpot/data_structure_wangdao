@@ -835,3 +835,38 @@ bool symmetry(DlinkList l){
 	return true;
 }
 
+/*
+2.3.7，二：18
+两个带头结点的循环单链表h1，h2，将h2接到h1之后，链接后的链表仍保持单链表形式。
+*/
+//注意！！尾结点的next指向头结点。
+struct linkList{
+	int data;
+	struct linkList *next;
+};
+void singlyLinkedList(linkList h1,linkList h2){
+/*
+	linkList *a=h1->next,*b=h2->next;
+	while(a->next!=h1->next){
+		a=a->next;
+	}
+	while(b->next!=h2->next){
+		b=b->next;
+	}
+	//h1的尾结点指向h2的头，h2的尾结点指向h1的头，h2头结点指向h1的头结点，即最终的头结点。
+	a->next=h2->next;
+	b->next=h1->next;
+	h2->next=h1->next;
+*/
+	linkList *a=h1,*b=h2;
+	while(a->next!=h1){
+		a=a->next;
+	}
+	while(b->next!=h2){
+		b->next;
+	}
+	a->next=h2->next;//答案写的是h2，将头结点h2直接加入到链表中了，我觉得不合适。
+	b->next=h1;
+	h2->next=h1->next;//答案没有这一句，h2仍指向原循环链表的头结点，则这样的循环链表有两个头结点。
+}
+
