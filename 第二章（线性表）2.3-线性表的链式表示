@@ -445,3 +445,178 @@ int main(){
 	return 0;
 }
 
+/*
+2.3.7，二：13
+两个递增的单链表，归并成一个递减的单链表。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+
+void merge(linkList *ahead,linkList* bhead){
+	//结果存在ahead里,bhead销毁
+	//有一个单链表不存在。
+	if(ahead==NULL||bhead==NULL){
+		return;
+	}//链表都存在，继续
+	
+	//将ahead断链，置空。
+	listNode *worka=ahead->next;
+	ahead->next=NULL;
+	listNode *workb=bhead->next;
+	
+	//释放bhead
+	delete bhead;
+	
+	//归并所有结点到ahead所指的链表，使用头插法。
+	listNode *tmpa,*tmpb;
+	while(worka&&workb){
+		if(worka->data < workb->data){
+			tmpa=worka;
+			worka=worka->next;
+			tmpa->next=ahead->next;
+			ahead->next=tmpa;
+		}else{
+			tmpb=workb;
+			workb=workb->next;
+			tmpb->next=ahead->next;
+			ahead->next=tmpb;
+		}
+	}
+	while(worka){
+		tmpa=worka;
+		worka=worka->next;
+		tmpa->next=ahead->next;
+		ahead->next=tmpa;
+	}
+	while(workb){
+		tmpb=workb;
+		workb=workb->next;
+		tmpb->next=ahead->next;
+		ahead->next=tmpb;
+	}
+}
+int main(){
+	int arr1[10]={1,6,7,8,10,22,   33,245};
+	int arr2[10]={3,4,8,9,34,   98,100};
+	
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	
+	linkList* b=new listNode;
+	linkList* bhead=b;
+	b->next=NULL;
+	
+	int i=0;
+	while(i<8){
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+	i=0;
+	while(i<7){
+		b->next=new listNode;
+		b=b->next;
+		b->data=arr2[i];
+		b->next=NULL;
+		i++;
+	}
+	
+	merge(ahead,bhead);
+	
+	printf("a:");
+	a=ahead->next;
+	while(a){
+		printf("%d,",a->data);
+		a=a->next;
+	}
+	return 0;
+}
+
+/*
+2.3.7，二：14
+两个递增的单链表，将公共元素产生单链表C，不破坏原先两个单链表的结点。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+
+linkList* common(linkList *ahead,linkList* bhead){
+	listNode *chead=new listNode,*tmp;
+	chead->next=NULL;
+
+	if(ahead&&bhead){
+		ahead=ahead->next;
+		bhead=bhead->next;
+	}
+	while(ahead&&bhead){
+		if(ahead->data == bhead->data){
+			tmp=new listNode;
+			tmp->data=ahead->data;
+			tmp->next=chead->next;
+			chead->next=tmp;
+			ahead=ahead->next;
+			bhead=bhead->next;
+		}else if(ahead->data < bhead->data){
+			ahead=ahead->next;
+		}else{
+			bhead=bhead->next;
+		}
+	}
+	return chead;
+}
+int main(){
+	int arr1[10]={1,3,7,8,10,22,100,245};
+	int arr2[10]={3,4,8,9,33,100,245};
+	
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	
+	linkList* b=new listNode;
+	linkList* bhead=b;
+	b->next=NULL;
+	
+	int i=0;
+	while(i<8){
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+	i=0;
+	while(i<7){
+		b->next=new listNode;
+		b=b->next;
+		b->data=arr2[i];
+		b->next=NULL;
+		i++;
+	}
+	
+	linkList* chead=common(ahead,bhead);
+	
+	printf("c:");
+	a=chead->next;
+	while(a){
+		printf("%d,",a->data);
+		a=a->next;
+	}
+	return 0;
+}
+
