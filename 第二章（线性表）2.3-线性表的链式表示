@@ -934,3 +934,92 @@ int main(){
 	
 	return 0;
 }
+
+/*
+2.3.7，二：20
+头指针为L的带头结点的非循环双向链表，每个结点有data，pred，next，此外还有一个访问频度域freq，初始化为0。
+每进行一次locate(L,x)运算，x的freq增1，并使此链表中的结点保持按访问频度非增（递减）顺序排列，同时最近访问的结点排在频度相同的结点的前面，以便使频繁访问的结点总是靠近表头。
+编写符合上述要求的locate函数，返回找到结点的地址，类型为指针型。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	int freq;
+	struct linkList *next,*pred;
+}listNode;
+
+listNode* locate(linkList *ahead,elemType x){
+	listNode *pre=ahead,*a=ahead->next;
+	listNode *tmp;
+	while(a){
+		if(a->data==x){//如果找到x，则freq加一，并向前搜索大于a的freq的结点所在位置，将a移到这个结点的后面。
+			a->freq++;
+			tmp=a->pred;
+			while(tmp!=ahead && tmp->freq<=a->freq){
+				tmp=tmp->pred;
+			}
+			if(tmp->next!=a){
+				//先将a拿出来，别忘了更新pred！！！！
+				pre->next=a->next;
+				if(pre->next!=NULL)
+					pre->next->pred=pre;//还要考虑a是否是最后一个元素！！！！
+				//a移到tmp后面
+				a->next=tmp->next;
+				a->pred=tmp;
+				tmp->next=a;
+				a->next->pred=a;
+			}
+			return a;
+		}else{//没有找到x，将pre，a移向下一位置
+			pre=a;
+			a=a->next;
+		}
+	}
+	return NULL;
+}
+void print(linkList* head){
+	head=head->next;
+	while(head){
+		printf("%d:%d	",head->data,head->freq);
+		head=head->next;
+	}
+	printf("\n");
+}
+int main(){
+	int arr1[10]={33,7,8,116,10,23,121,22,100,245};
+	
+	//注意：非循环双向链表，第一个结点的pred指向头结点，最后一个结点的next为NULL。
+	//建立非循环双向链表，初始化头结点，next为NULL，pred这里初始化为自身。
+	linkList* ahead=new listNode;
+	ahead->next=NULL;
+	ahead->pred=ahead;
+	
+	linkList *a=ahead,*pre;
+	int i=0;
+	while(i<10){
+		pre=a;
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->freq=0;
+		a->next=NULL;
+		a->pred=pre;
+		i++;
+	}
+	
+	while(i){
+		printf("(输入0会执行一次后结束)i:");
+		scanf("%d",&i);
+		if(a=locate(ahead,i)){//a存在打印它的值及频度，否则打印NULL
+			print(ahead);
+			printf("data:%d,freq:%d\n",a->data,a->freq);
+		}else{
+			printf("NULL\n");
+		}
+	}
+	return 0;
+}
+
