@@ -1124,3 +1124,66 @@ node* addr(list *str1,list *str2){
 	}
 	return NULL;
 }
+
+/*
+2.3.7，二：23
+尽可能高效地，对单链表里绝对值相同的结点，仅保留一个，其他的均删除。已知结点值不大于n。
+*/
+#include<cstdio>
+#include<cstdlib>
+typedef struct list{
+	int data;
+	struct list *next;
+}node;
+void del(list *head,int n){
+	int freq[n+1];
+	int i,t;
+	for(i=0;i<n+1;i++){
+		freq[i]=0;
+	}
+	node *tmp=head->next,*pre=head;
+	while(tmp){
+		if((t=tmp->data)<0){
+			t=0-tmp->data;
+		}
+		if(freq[t]){
+			pre->next=tmp->next;
+			delete tmp;
+			tmp=pre->next;
+		}else{
+			freq[t]++;
+			pre=tmp;
+			tmp=tmp->next;
+		}
+	}
+}
+void print(list* head){
+	head=head->next;
+	while(head){
+		printf("%d,",head->data);
+		head=head->next;
+	}
+	printf("\n");
+}
+int main(){
+	int arr1[10]={121,22,22,245,23,
+	                      23,121,22,100,245};
+
+	list* ahead=new node;
+	ahead->next=NULL;
+	
+	list *a=ahead;
+	int i=0;
+	while(i<10){
+		a->next=new node;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+
+	del(ahead,245);
+	
+	print(ahead);
+	return 0;
+}
