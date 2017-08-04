@@ -1023,3 +1023,55 @@ int main(){
 	return 0;
 }
 
+/*
+2.3.7，二：21
+带头结点的非循环单链表，只给出头指针list，查找链表倒数第k个位置上的结点，k为正整数，查找成功打印data值，返回1，否则返回0.
+算法尽可能高效。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+
+int find(linkList *list,int k){
+	int num=0;
+	listNode *tmp=list;
+	while(tmp=tmp->next){
+		num++;
+	}
+	tmp=list->next;
+	for(int i=1;i<=num;i++){
+		if(i==k){
+			printf("data:%d\n",tmp->data);
+			return 1;
+		}
+		tmp=tmp->next;
+	}
+	return 0;
+}
+int main(){
+	int arr1[10]={33,7,8,116,10,
+	                      23,121,22,100,245};
+
+	linkList* ahead=new listNode;
+	ahead->next=NULL;
+	
+	linkList *a=ahead;
+	int i=0;
+	while(i<10){
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+
+	printf("%d\n",find(ahead,11));
+	
+	return 0;
+}
+
