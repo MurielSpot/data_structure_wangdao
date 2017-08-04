@@ -1076,3 +1076,51 @@ int main(){
 	return 0;
 }
 
+/*
+2.3.7，二：22
+*/
+//比答案啰嗦很多
+typedef struct list{
+	char data;
+	struct list *next;
+}node;
+node* addr(list *str1,list *str2){
+	node *a=str1,*b=str2;
+	int m=0,n=0;
+	while(a=a->next){
+		m++;
+	}
+	while(b=b->next){
+		n++;
+	}
+	int i;
+	a=str1->next;b=str2->next;
+	if(m>=n){
+		i=m-n;
+		while(i--){
+			a=a->next;
+		}
+		while(a&&b){
+			if(a!=b){
+				a=a->next;
+				b=b->next;
+			}else{
+				return a;
+			}
+		}
+	}else{
+		i=n-m;
+		while(i--){
+			b=b->next;
+		}
+		while(a&&b){
+			if(a!=b){
+				a=a->next;
+				b=b->next;
+			}else{
+				return a;
+			}
+		}
+	}
+	return NULL;
+}
