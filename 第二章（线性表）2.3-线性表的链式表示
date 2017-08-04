@@ -870,3 +870,67 @@ void singlyLinkedList(linkList h1,linkList h2){
 	h2->next=h1->next;//答案没有这一句，h2仍指向原循环链表的头结点，则这样的循环链表有两个头结点。
 }
 
+/*
+2.3.7，二：19
+带头结点的循环单链表，其结点值均为正整数。找出单链表中结点值最小的结点，并删除，重复此步骤，直到表空，删除头结点。
+*/
+#include<cstdio>
+#include<cstdlib>
+
+typedef int elemType;
+typedef struct linkList{
+	elemType data;
+	struct linkList *next;
+}listNode;
+
+bool del_minimum(linkList *ahead){
+	//初始化变量，min一开始为第一个结点。
+	listNode *min=ahead->next,*work=ahead->next,*pre=ahead,*minPre=ahead;
+	while(work){
+		if(work==ahead){//一圈寻找完
+			if(work->next==ahead){//链表已经空，删除头结点。
+				delete work;//delete一个非空指针后需要赋值为null，因为非空指针不会被置0，仍然指向原来的地址，再次delete它会出现问题。但是delete一个空指针是可以的。
+				work=NULL;
+			}else{//链表非空，打印并删除min。再次重置pre,work,min，寻找新一轮的最小值。
+				printf("%d,",min->data);
+				minPre->next=min->next;
+				delete min;
+				pre=minPre=ahead;
+				work=ahead->next;
+				min=work;
+			}
+		}else{//一圈未找完
+			//找到更小值更新min和minPre，未找到则更新pre和work
+			if(min->data>work->data){
+				minPre=pre;
+				min=work;
+			}else{
+				pre=work;
+				work=work->next;
+			}
+		}
+	}
+	return true;
+}
+int main(){
+	int arr1[10]={33,7,8,116,10,23,121,22,100,245};
+	
+	//建立链表
+	linkList* a=new listNode;
+	linkList* ahead=a;
+	a->next=NULL;
+	
+	int i=0;
+	while(i<10){
+		a->next=new listNode;
+		a=a->next;
+		a->data=arr1[i];
+		a->next=NULL;
+		i++;
+	}
+	a->next=ahead;
+	
+	del_minimum(ahead);
+	
+	return 0;
+}
