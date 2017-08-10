@@ -216,3 +216,63 @@ int main(){
 	return 0;
 }
 
+/*
+4.3.3，二：6
+数组a，b分别存储先序遍历和中序遍历的序列，编写算法建立该二叉树的二叉链表。
+*/
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+
+const int SIZE=11;
+int a[SIZE]={4,5,1,9,10,13,14,6,7,100,20};
+int b[SIZE]={9,1,5,10,13,4,6,14,100,7,20};
+
+node* create(int a1,int a2,int b1,int b2){
+	if(a1>a2)return NULL;
+	
+	node *p=new node;//分割出的子树的先序序列第一个元素a[a1]为当前子树的根
+	p->data=a[a1];
+	if(a1==a2){//先序遍历只有一个元素，即当前子树只有一个元素，左右孩子直接置为NULL，返回p
+		p->left=NULL;
+		p->right=NULL;
+	}else{//先序遍历不只一个元素，则在中序序列b1-b2中寻找先序序列第一个元素a1在中序序列中的位置，递归获得左右孩子的结点值。
+		int tmp=b1;
+		while(tmp<=b2&&b[tmp]!=a[a1]){
+			tmp++;
+		}
+		if(tmp>b2){
+			printf("somewhere wrong!");
+			return NULL;
+		}
+		p->left=create(a1+1,a1+tmp-b1,b1,tmp-1);//最后的tmp-1写成tmp好像也没影响，可能因为判断是否return NULL是根据a1和a2。写成tmp具体有什么副作用还没想清楚。
+		p->right=create(a1+tmp-b1+1,a2,tmp+1,b2);
+	}
+	return p;
+}
+void print(node *head){
+	if(head){
+		printf("%d, ",head->data);
+		print(head->left);
+		print(head->right);
+	}
+}
+void print2(node *head){
+	if(head){
+		print2(head->left);
+		printf("%d, ",head->data);
+		print2(head->right);
+	}
+}
+int main(){
+	node *root=create(0,10,0,10);
+	printf("print:");
+	print(root);
+	printf("\nprint2:");
+	print2(root);
+	return 0;
+}
