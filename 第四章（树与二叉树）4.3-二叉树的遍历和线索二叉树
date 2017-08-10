@@ -85,7 +85,68 @@ int main(){
 4.3.3，二：4
 二叉树自上而下、从右到左的层次遍历算法。
 */
+#include<cstdio>
+#include<cstdlib>
 
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=17;
+int arr[SIZE]={0,
+		110,
+		70,            30,
+		90,    0,     5,     9,
+		1,2,   0,0,  0,40,10,0  };
+node* createTree(int index){
+	if(!arr[index]){
+		return NULL;
+	}
+	node *p=new node;
+	p->left=createTree(index*2);
+	p->right=createTree(index*2+1);
+	return p;
+}
+void invertLevel(node *root){
+	//建立及初始化栈
+	node* stack[SIZE];
+	int sp=-1;
+	//建立及初始化队列
+	node* queue[SIZE];
+	int front=0,rear=0;
+	
+	queue[rear]=root;
+	rear=(rear+1)%SIZE;
+	node *p;
+	while(rear!=front){//队列非空，则弹出队首结点，将它的孩子结点加入队尾。该结点压栈。
+		p=queue[front];
+		front=(front+1)%SIZE;
+		if(p->left){
+			if((rear+1)%SIZE!=front){
+				queue[rear]=p->left;
+				rear=(rear+1)%SIZE;
+			}
+		}
+		if(p->right){
+			if((rear+1)%SIZE!=front){
+				queue[rear]=p->right;
+				rear=(rear+1)%SIZE;
+			}
+		}
+		stack[++sp]=p;
+	}
+	while(sp!=-1){
+		printf("%d, ",stack[sp--]->data);
+	}
+}
+
+int main(){
+	node *root=createTree(1);
+	printf("\nprint tree:");
+	invertLevel(root);
+	return 0;
+}
 
 /*
 4.3.3，二：5
