@@ -152,4 +152,67 @@ int main(){
 4.3.3，二：5
 二叉树采用二叉链表存储结构，设计一个非递归算法求二叉树的高度。
 */
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=21;
+int arr[SIZE]={0,
+		110,
+		70,            30,
+		90,    0,     5,     9,
+		1,2,   0,0,  0,40,10,0,
+		0,0,0,13  };
+node* createTree(int index){
+	if(!arr[index]){
+		return NULL;
+	}
+	node *p=new node;
+	p->left=createTree(index*2);
+	p->right=createTree(index*2+1);
+	return p;
+}
+void BTdepth(node *root){
+	//建立及初始化队列
+	node* queue[SIZE];
+	int front=0,rear=0;
+	
+	queue[rear]=root;
+	rear=(rear+1)%SIZE;
+	int level=0;
+	node *p,*last=root,*nextlast;
+	while(rear!=front){//队列非空，则弹出队首结点，将它的孩子结点加入队尾。该结点压栈。
+		p=queue[front];
+		front=(front+1)%SIZE;
+		//下一层孩子压栈时，只要发现有孩子就把它设置为下一层最后一个结点nextlast
+		if(p->left){
+			if((rear+1)%SIZE!=front){
+				queue[rear]=p->left;
+				rear=(rear+1)%SIZE;
+			}
+			nextlast=p->left;
+		}
+			if((rear+1)%SIZE!=front){
+				queue[rear]=p->right;
+				rear=(rear+1)%SIZE;
+			}
+			nextlast=p->right;
+		}
+		if(p==last){//访问到这一层最后一个结点时，才可以改动last，将它置为下一层最后一个结点nextlast，若下一层没有最后一个结点，nextlast的值和last的值应该是相等的。
+			level++;
+			last=nextlast;
+		}
+	}
+	printf("%d\n",level);
+}
+
+int main(){
+	node *root=createTree(1);
+	printf("depth:");
+	BTdepth(root);
+	return 0;
+}
 
