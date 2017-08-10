@@ -1,1 +1,94 @@
+/*
+4.3.3，二：3
+后序遍历二叉树的非递归算法。
+*/
+//还不是很理解
+#include<cstdio>
+#include<cstdlib>
+
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=17;
+int arr[SIZE]={0,
+						110,
+						0,             30,
+						0,     0,     5,     9,
+						0,0,0,0,  0,40,10,0  };
+node* createTree(int index){
+	printf("\nnode %d,",index);
+	if(!arr[index]){
+		printf("NULL\n");
+		return NULL;
+	}
+	node *p=new node;
+	printf("data:%d\n",p->data=arr[index]);
+	printf("left of node %d",index);
+	p->left=createTree(index*2);
+	printf("right of node %d",index);
+	p->right=createTree(index*2+1);
+	return p;
+}
+//后续遍历递归算法
+void recursive_postorder_traversal(node *head){
+	if(head){
+		recursive_postorder_traversal(head->left);
+		recursive_postorder_traversal(head->right);
+		printf("%d, ",head->data);
+	}
+}
+//后续遍历非递归算法
+void non_recursive_postorder_traversal(node *head){
+	node* stack[SIZE];//堆栈存储的是结点的地址。
+	int i;
+	for(i=0;i<SIZE;i++){
+		stack[i]=NULL;
+	}
+	int sp=-1;
+	node *pre=head,*p=head;
+	stack[++sp]=head; 
+	while(sp!=-1){
+		while(p->left){//左孩子不存在则结束循环，若存在则将这个左孩子压入堆栈，并让p指向左孩子。
+			pre=p;
+			p=p->left;
+			stack[++sp]=p;
+		}
+		p=stack[sp--];
+		while(!p->right||p->right==pre){//如果右结点不存在，则打印当前结点，pre记录此次访问，弹出栈顶结点
+			printf("%d, ",p->data);
+			pre=p;
+			if(sp==-1){
+				return;
+			}
+			p=stack[sp--];
+		}
+		//经过上面的循环，p->right只有存在且未被访问一种情况。只要
+		stack[++sp]=p;
+		pre=p;
+		p=p->right;
+		stack[++sp]=p;
+	}
+}
+
+int main(){
+	node *head=createTree(1);
+	printf("\nprint tree:");
+	recursive_postorder_traversal(head);
+	printf("\nprint tree:");
+	non_recursive_postorder_traversal(head);
+	return 0;
+}
+
+/*
+4.3.3，二：4
+二叉树自上而下、从右到左的层次遍历算法。
+*/
+
+
+/*
+4.3.3，二：5
+二叉树采用二叉链表存储结构，设计一个非递归算法求二叉树的高度。
+*/
 
