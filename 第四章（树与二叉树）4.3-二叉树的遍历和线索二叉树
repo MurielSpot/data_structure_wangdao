@@ -315,3 +315,24 @@ int complete(node *p,int size){
 	}
 	return 1;
 }
+
+/*
+4.3.3，二：8
+计算二叉树双分支结点的个数。
+*/
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+int n=0;
+int complete(node *p){
+	if(p){
+		if(p->left&&p->right){
+			n++;
+		}
+		complete(p->left);
+		complete(p->right);
+	}
+}
+
