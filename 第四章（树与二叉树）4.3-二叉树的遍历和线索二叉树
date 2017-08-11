@@ -326,7 +326,7 @@ struct node{
 	struct node *right;
 };
 int n=0;
-int complete(node *p){
+void complete(node *p){
 	if(p){
 		if(p->left&&p->right){
 			n++;
@@ -336,3 +336,47 @@ int complete(node *p){
 	}
 }
 
+/*
+4.3.3，二：9
+*/
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+int n=0;
+void swap(node *p){
+	if(p){
+		node *tmp=p->left;
+		p->left=p->right;
+		p->right=tmp
+		swap(p->left);
+		swap(p->right);
+	}
+}
+
+/*
+4.3.3，二：10
+*/
+//mine
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+int n=0;int k=9;//假设找第9个元素
+int preNode(node *p){
+	int t1,t2;
+	if(p){
+		n++;
+		if(n==k){
+			return p->data;
+		}else{
+			t1=preNode(p->left);
+			if(t1!=-1)return t1;
+			t2=preNode(p->right);
+			if(t2!=-1)return t2;
+		}
+	}
+	return -1;
+}
