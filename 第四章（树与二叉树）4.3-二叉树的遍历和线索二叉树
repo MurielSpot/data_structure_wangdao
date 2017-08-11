@@ -276,3 +276,42 @@ int main(){
 	print2(root);
 	return 0;
 }
+
+/*
+4.3.3，二：7
+判别给定二叉树是不是完全二叉树。
+*/
+//和答案思路不同，且没有运行，不能保证正确。
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+int complete(node *p,int size){
+	if(!p){
+		return 1;//空树为满二叉树！！！！！！！！！！！！！！！！！
+	}
+	int stack[size],sp=-1;
+	int flag=1;
+	
+	stack[++sp]=p;
+	while(sp!=-1){
+		p=stack[sp--];
+		//遇到一个孩子为空的结点则将flag置为2，此后如果当前结点还有其他右孩子，或其他结点还有孩子，则直接返回0。
+		if(p->left){//左孩子存在
+			if(flag==1){//之前结点都有两个孩子
+				stack[++sp]=p->left;
+			}else return 0;//之前结点不全为两个孩子，非完全二叉树
+		}else if(flag!=2){//flag不为2，才需要重新给flag赋值
+			flag=2;
+		}
+		if(p->right){
+			if(flag==1){
+				stack[++sp]=p->right;
+			}else return 0;
+		}else if(flag!=2){
+			flag=2;
+		}
+	}
+	return 1;
+}
