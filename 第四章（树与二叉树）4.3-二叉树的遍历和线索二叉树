@@ -380,3 +380,35 @@ int preNode(node *p){
 	}
 	return -1;
 }
+
+/*
+4.3.3，二：11
+删去以元素值x为根节点的这个结点的子树。
+*/
+//mine，我没删x所在的节点，而答案删了。答案采用了层序遍历以便将x的父结点置空。
+//我这里删除的是x的左右子树，在此之后增加将孩子结点为x的结点直接删除置空，应该就和答案一样了。
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+void deleteSub(node *p){//删除已x为根的左右两个子树。
+	if(p){
+		deleteSub(p->left);
+		deleteSub(p->right);
+		delete p->left;
+		p->left=NULL;
+		delete p->right;
+		p->right=NULL;
+	}
+	
+}
+void preNode(node *p,int x){//如果当前结点是x，则删除其左右子树，否则继续在左右子树中寻找x。
+	if(p){
+		if(p->data==x){
+			deleteSub(p);
+		}
+		preNode(p->left);
+		preNode(p->right);
+	}
+}
