@@ -463,3 +463,93 @@ int main(){
 	printAncestor(root);
 	return 0;
 }
+
+/*
+4.3.3，二：13
+打印值为x的结点的所有祖先结点。
+*/
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=21;
+int arr[SIZE]={0,
+		110,
+		70,            30,
+		90,    0,     5,     9,
+		1,2,   0,0,  0,40,10,0,
+		0,0,0,13  };
+node* createTree(int index){
+	if(!arr[index]){
+		return NULL;
+	}
+	node *p=new node;
+	p->data=arr[index];
+	p->left=createTree(index*2);
+	p->right=createTree(index*2+1);
+	return p;
+}
+
+int x=30;
+node *t1,*t2;
+node *r=NULL;
+node* commonAncestor(node *root,node *p,node *q){
+	if(!p||!q)return NULL;
+	if(root){
+		//t1，t2而有p，q，NULL，r四种取值，依次表示是p的祖先，是q的祖先，不是p或q的祖先，找到了r
+		node *t1=commonAncestor(root->left,p,q);
+		node *t2=commonAncestor(root->right,p,q);
+		if(r){//执行过前面两个函数之后，如果r已经找到，直接返回r
+			return r;
+		}
+		//若r还没找到，继续下面的判断，判断当前结点是否是祖先结点的两种情况：1、左右孩子分别是p，q的祖先结点；2、当前结点是p或q，而某个孩子是q或p的祖先结点。
+		//若当前结点是祖先结点，则更改r的值，返回r。否则返回p，q，NULL。
+		if((t1==p&&t2==q)||(t1==q&&t2==p)){
+			r=root;return r;
+		}else if(root==p){
+			if(t1==q||t2==q){
+				r=root;return r;
+			}else return root;
+		}else if(root==q){
+			if(t1==p||t2==p){
+				r=root;return r;
+			}else return root;
+		}else{
+			if(t1)return t1;
+			if(t2)return t2;
+		}
+	}
+	return NULL;
+}
+node* find(node* root,int x){
+	if(root){
+		if(root->data==x)return root;
+		node *t;
+		if(t=find(root->left,x)){
+			return t;
+		}else if(t=find(root->right,x)){
+			return t;
+		}
+	}
+	return NULL;
+}
+int main(){
+	node *root=createTree(1);
+	node *p=find(root,13),*q=find(root,1),*tmp;
+	if(p){
+		printf("p->data=%d,p->addr=%d,",p->data,p);
+	}else printf("NULL,");
+	if(q){
+		printf("p->data=%d,p->addr=%d\n",q->data,q);
+	}else printf("NULL\n");
+	if(tmp=commonAncestor(root,p,q)){
+		printf("tmp->data=%d\n",tmp->data);
+	}else printf("no p or q!\n");
+	if(r){
+		printf("r->data=%d",r->data);
+	}else printf("no common!");
+	return 0;
+}
