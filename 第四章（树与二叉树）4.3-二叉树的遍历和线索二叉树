@@ -553,3 +553,69 @@ int main(){
 	}else printf("no common!");
 	return 0;
 }
+
+/*
+4.3.3，二：14
+求非空二叉树的宽度。
+*/
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=21;
+int arr[SIZE]={0,
+		110,
+		70,            30,
+		90,    2,     10,     9,
+		1,2,   20,80,  0,40,0,0,
+		0,0,   0,13  };
+node* createTree(int index){
+	if(!arr[index]){
+		return NULL;
+	}
+	node *p=new node;
+	p->data=arr[index];
+	p->left=createTree(index*2);
+	p->right=createTree(index*2+1);
+	return p;
+}
+
+int width(node *p){
+	node *queue[SIZE];//用的是队列！！！！！不是堆栈
+	int front=0,rear=0;
+	
+	node *last=p,*tmplast=p;
+	queue[rear++]=p;
+	
+	int max=1;
+	int tmpmax=0;
+	while(front!=rear){
+		//将堆栈里当前到last的结点弹出，扫描孩子压入栈中，最后一个孩子为tmplast。扫描到last时，将tmplast赋给last。
+		p=queue[front++];
+		if(p->left){
+			queue[rear++]=p->left;
+			tmplast=p->left;
+			tmpmax++;
+		}
+		if(p->right){
+			queue[rear++]=p->right;
+			tmplast=p->right;
+			tmpmax++;
+		}
+		if(p==last){
+			last=tmplast;
+			if(max<tmpmax)max=tmpmax;
+			tmpmax=0;
+		}
+	}
+	return max;
+}
+int main(){
+	node *root=createTree(1);
+	printf("width:%d",width(root));
+	return 0;
+}
+
