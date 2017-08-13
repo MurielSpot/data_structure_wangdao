@@ -1,0 +1,134 @@
+/*
+3.3.6，二：1
+*/
+//按照答案写的，大致与答案一样，但是栈的处理没仔细写，可能会遇到空栈还要退栈的情况！！！！
+bool bracketsCheck(char s[]){
+	char stack[20];int sp=-1;
+	int i=0;
+	char tmp;
+	while(s[i]!='\0'){
+		switch(s[i]){
+			case '(':stack[++sp]=s[i];break;
+			case '[':stack[++sp]=s[i];break;
+			case '{':stack[++sp]=s[i];break;
+			case ')':tmp=stack[sp--];
+						if(tmp!='(')return false;
+			break;
+			case ']':tmp=stack[sp--];
+						if(tmp!='[')return false;
+			break;
+			case '}':tmp=stack[sp--];
+						if(tmp!='{')return false;
+			break;
+			default:break;
+		}
+		i++;
+	}
+	if(sp==-1){
+		printf("括号匹配\n");
+		return true;
+	}else{
+		printf("括号不匹配\n");
+		return false;
+	}
+}
+
+/*
+3.3.6，二：2
+*/
+//mine
+#include<cstdio>
+void trainArrange(char s[]){
+	int soft=0;
+	char stack[50];int sp=-1;
+	int i=0;
+	while(s[i]!='\0'){
+		if(s[i]=='H'&&sp!=50){
+			stack[++sp]=s[i];
+		}else if(s[i]=='S'){
+			s[soft++]=s[i];
+		}
+		i++;
+	}
+	while(soft<i&&sp!=-1){
+		s[soft++]=stack[sp--];
+	}
+}
+int main(){
+	char a[20];
+	scanf("%s",a);
+	trainArrange(a);
+	printf("\n%s",a);
+	return 0;
+}
+//答案用了指针，比用索引更简洁！！！！、
+
+/*
+3.3.6，二：3
+这一题有难度！！！！
+*/
+int stack[100];
+int sp=0;
+int pop(){
+	if(sp==-1){
+		printf("empty\n");
+		return -1;
+	}
+	return stack[sp--];
+}
+int push(int x){
+	if(sp==99){
+		printf("full\n");
+		return -1;
+	}
+	stack[++sp]=x;
+	return 0;//true
+}
+//mine
+int p(int n,int x){
+	int data1=1,data2=2*x,data3;
+	push(data1);
+	push(data2);
+	int i=2;
+	while(i<=n){
+		data2=pop();
+		data3=2*x*data2-2*(i-1)*pop();
+		push(data2);
+		push(data3);
+		i++;
+	}
+	return data3;
+}
+//答案
+double p2(int n,double x){
+	struct stack{
+		int no;
+		double val;
+	}st[100];
+	int top=-1,i;
+	double fv1=1,fv2=2*x;
+	for(i=n;i>=2;i--){
+		top++;
+		st[top].no=i;
+	}
+	while(top>=0){
+		st[top].val=2*x*fv2-2*(st[top].no-1)*fv1;
+		fv1=fv2;
+		fv2=st[top].val;
+		top--;
+	}
+	if(n==0){
+		return fv1;
+	}
+	return fv2;
+}
+int main(){
+	int n=5,x=3;
+	printf("Pn:%d\n",p(n,x));
+	printf("Pn:%lf",p2(n,x));
+	return 0;
+}
+
+/*
+3.3.6，二：4
+*/
