@@ -619,3 +619,38 @@ int main(){
 	return 0;
 }
 
+/*
+4.3.3，二：15
+满二叉树，所有结点值均不同，已知先序序列为pre，涉及算法求后序序列post。
+*/
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=21;
+int stack[SIZE];
+int sp=-1;
+void postOrder(int preOrder[],int front,int rear){
+	if(front!=rear){
+		postOrder(preOrder,front+1,front+(rear-front)/2);
+		postOrder(preOrder,front+1+(rear-front)/2,rear);
+	}
+	stack[++sp]=preOrder[front];
+}
+int arr[SIZE]={0,
+		110,
+		70,            30,
+		90,    4,     10,     9,
+		1,2,   20,80,  3,40,5,7,
+		0,0,   0,0  };
+int preOrder[SIZE]={110,70,90,1,2,4,20,80,30,10,3,40,9,5,7};
+int main(){
+	postOrder(preOrder,0,14);
+	for(int i=0;i<=sp;i++){
+		printf("%d,",stack[i]);
+	}
+	return 0;
+}
