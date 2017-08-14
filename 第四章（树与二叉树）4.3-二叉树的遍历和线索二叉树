@@ -718,3 +718,18 @@ int main(){
 	}
 	return 0;
 }
+
+/*
+4.3.3，二：17
+设计算法判断两颗二叉树是否相似。相似：t1和t2都是空的二叉树或者都只有一个根结点，或t1的左子树和t2的左子树是相似的且t1的右子树和t2的右子树是相似的。
+*/
+//答案的做法
+int similar(node *t1,node *t2){
+	if(t1&&t2){//当前结点都存在，继续判断
+		int tag1=similar(t1->left,t2->left);
+		int tag2=similar(t1->right,t2->right);
+		return tag1&&tag2;
+	}else if(!t1&&!t2){//当前树都不存在
+		return 1;
+	}else return 0;//只有一个树存在
+}
