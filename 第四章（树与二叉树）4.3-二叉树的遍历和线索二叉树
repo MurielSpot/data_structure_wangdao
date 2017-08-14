@@ -733,3 +733,83 @@ int similar(node *t1,node *t2){
 		return 1;
 	}else return 0;//只有一个树存在
 }
+
+/*
+4.3.3，二：17，把题目改变：
+设计算法判断两颗树是否相似。相似：t1和t2都是空的二叉树，或者都只有一个结点，或t1，t2都有两个结点且t1的左子树和t2的左子树是相似的且t1的右子树和t2的右子树是相似的。
+这里与上面的区别在于，不要求t1和t2有一个结点时，这一个结点为根结点时才相似。
+即一个结点只有一个孩子结点时，是不分左右的。
+*/
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=24;
+
+node* createTree(int index,int array[]){
+	if(!array[index]||index>=SIZE){
+		return NULL;
+	}
+	node *p=new node;
+	p->data=array[index];
+	p->left=createTree(index*2,array);
+	p->right=createTree(index*2+1,array);
+	return p;
+}
+
+inline int subtree(node *p){
+	if(p->left&&p->right){
+		return 2;
+	}else if(!p->left && !p->right){
+		return 0;
+	}else return 1;
+}
+int similar(node *t1,node *t2){
+	int tag1,tag2;//这里不能用全局变量，因为递归里会改变tag的值。
+	if(t1&&t2){//当前结点都存在，继续判断
+		printf("t1:%d,t2:%d\n",t1->data,t2->data);
+		if(subtree(t1)==2 && subtree(t2)==2){
+			tag1=similar(t1->left,t2->left);
+			printf("t1:%d,t2:%d\n",t1->data,t2->data);
+			tag2=similar(t1->right,t2->right);
+			printf("t1:%d,t2:%d\n",t1->data,t2->data);
+			if(tag1&&tag2)return 1;//左右子树存在且均相似
+			else return 0;//左右子树存在，但并不都是相似的。
+		}else if(subtree(t1)==0 && subtree(t2)==0){
+			return 1;//左右子树均不存在，当前t1、t2都是叶子结点，相似。
+		}else if(subtree(t1)==1 && subtree(t2)==1){
+			if(t1->left){
+				if(t2->left) tag1=similar(t1->left,t2->left);
+				else tag1=similar(t1->left,t2->right);
+			}else{
+				if(t2->left) tag1=similar(t1->right,t2->left);
+				else tag1=similar(t1->right,t2->right);
+			}
+			printf("t1:%d,t2:%d\n",t1->data,t2->data);
+			return tag1;
+		}else return 0;
+	}else if(!t1&&!t2){//当前结点都不存在，好像只有两个根结点才会需要下面这两个if判断。
+		return 1;
+	}else return 0;//只有一个结点存在
+}
+int main(){
+	int arr[SIZE]={0,
+		1,
+		0,               3,
+		4,       5,      6,   7,
+		8,  0,   10,  11,0,13,0,0,
+		0,0,0,19,20,21  };
+	int arr2[SIZE]={0,
+		1,
+		2,               3,
+		4,       5,      6,     7,
+		8,  0,   10,  11,0,13,0,0,
+		0,0,0,19,20,21  };
+	node *t1=createTree(1,arr);
+	node *t2=createTree(1,arr2);
+	printf("%d",similar(t1,t2));
+	return 0;
+}
