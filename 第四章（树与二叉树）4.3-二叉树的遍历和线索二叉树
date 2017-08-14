@@ -654,3 +654,67 @@ int main(){
 	}
 	return 0;
 }
+
+/*
+4.3.3，二：16
+设计算法将二叉树叶结点从左到右连成一个单链表，表头指针为head，二叉树按二叉链表方式存储，链接时用叶结点的右结点的右指针域来存放单链表指针。
+*/
+#include<cstdio>
+#include<cstdlib>
+struct node{
+	int data;
+	struct node *left;
+	struct node *right;
+};
+const int SIZE=24;
+int arr[SIZE]={0,
+		110,
+		70,            30,
+		90,    2,     10,     9,
+		1,2,   20,80,  0,40,0,0,
+		0,0,0,13,43,45  };
+node* createTree(int index){
+	if(!arr[index]||index>=SIZE){
+		return NULL;
+	}
+	node *p=new node;
+	p->data=arr[index];
+	p->left=createTree(index*2);
+	p->right=createTree(index*2+1);
+	return p;
+}
+void print(node *p){
+	if(p){
+		printf("%d, ",p->data);
+		print(p->left);
+		print(p->right);
+	}
+}
+node *head=NULL;
+node *tmp=NULL;
+void leaves(node *p){
+	if(p){
+		if(!p->left && !p->right){
+			if(head){
+				tmp->right=p;
+				tmp=p;
+			}else{
+				head=p;
+				tmp=p;
+			}
+		}
+		leaves(p->left);
+		leaves(p->right);
+	}
+}
+int main(){
+	node *root=createTree(1);
+	printf("\n");
+	leaves(root);
+	node *p=head;
+	while(p){
+		printf("%d, ",p->data);
+		p=p->right;
+	}
+	return 0;
+}
