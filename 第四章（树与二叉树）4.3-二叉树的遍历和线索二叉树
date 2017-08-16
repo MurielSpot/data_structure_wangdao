@@ -813,3 +813,129 @@ int main(){
 	printf("%d",similar(t1,t2));
 	return 0;
 }
+
+/*
+4.3.3，二：18
+在中序线索二叉树里查找指定结点在后序的前驱结点的算法。
+*/
+//看了答案。我没有按题目要求查找指定结点的前驱，而是把所有结点的前驱都打印出来了。
+#include<cstdio>
+#include<cstdlib>
+struct threadNode{
+	int data;
+	struct threadNode *lchild,*rchild;
+	int ltag,rtag;//1指示结点的后继，0指示结点的孩子。
+};
+
+const int SIZE=16;
+
+void createInThread(threadNode *tree);
+void inThread(threadNode* &p,threadNode* &pre);
+threadNode* createTree(int index,int array[]);
+void print(threadNode *p);
+
+
+threadNode* createTree(int index,int array[]){
+	if(!array[index]||index>=SIZE){
+		return NULL;
+	}
+	threadNode *p=new threadNode;
+	p->data=array[index];
+	p->ltag=0;
+	p->rtag=0;
+	p->lchild=createTree(index*2,array);
+	p->rchild=createTree(index*2+1,array);
+	return p;
+}
+void print(threadNode *p){
+	if(p){
+		if(p->ltag==0)print(p->lchild);
+		printf("%d, ",p->data);
+		if(p->rtag==0)print(p->rchild);
+	}
+}
+void printThreadTree(threadNode *p){
+	if(p){
+		if(p->ltag==0){
+			printThreadTree(p->lchild);
+		}
+		printf("data:%d, ",p->data);
+		if(p->lchild){
+			printf("l(%d:%d), ",p->ltag,p->lchild->data);
+		}else printf("NULL ");
+		if(p->rchild){
+			printf("r(%d:%d)\n",p->rtag,p->rchild->data);
+		}else printf("NULL\n");
+		
+		
+		if(p->rtag==0){
+			printThreadTree(p->rchild);
+		}
+	}
+}
+void createInThread(threadNode *tree){
+	threadNode *pre=NULL;
+	if(tree){
+		inThread(tree,pre);
+		pre->rchild=NULL;//处理遍历的最后一个结点
+		pre->rtag=1;
+	}
+}
+void inThread(threadNode* &p,threadNode* &pre){
+	if(p){
+		inThread(p->lchild,pre);//递归，线索化左子树
+		if(p->lchild==NULL){//左子树为空，建立前驱线索
+			p->lchild=pre;
+			p->ltag=1;
+		}
+		if(pre && pre->rchild==NULL){//建立前驱线索的后继线索
+			pre->rchild=p;
+			pre->rtag=1;
+		}
+		pre=p;//标记当前结点为刚刚访问过的结点
+		inThread(p->rchild,pre);//递归，线索化右子树
+	}
+}
+
+void postOrderPreNode(threadNode *p,int tag){
+	if(p&&tag==0){
+		postOrderPreNode(p->lchild,p->ltag);
+		//printf("(%d)\n",p->data);
+		postOrderPreNode(p->rchild,p->rtag);
+		//printf("(%d)\n",p->data);
+		//当tag为0时，右孩子存在则右孩子是前一个访问的，右孩子不存在左孩子存在则左孩子是最后一个访问的。
+		if(p->rtag==0){
+			printf("%d, ",p->rchild->data);
+		}else if(p->ltag==0){
+			printf("%d, ",p->lchild->data);
+		}
+		//tag为1时，
+		else if(p->ltag==1){
+			threadNode *tmp=p;//这里应该不能对tmp赋值p->rchild，因为p可能是中序遍历第一个结点，它的左孩子的值是NULL，如果赋值给tmp，tmp->lchild为NULL->lchild，会出错。
+			//如果p是中序遍历第一个结点，则在中序和后序下均无前驱！！！！
+			while(tmp->ltag==1&&tmp->lchild!=NULL){
+				tmp=tmp->lchild;
+			}
+			if(tmp->lchild){
+				printf("%d, ",tmp->lchild->data);
+			}else{
+				printf("NULL, ");
+			}
+		}
+	}
+}
+int main(){
+	int arr[SIZE]={0,
+		110,
+		10,           30,
+		0,   0,     5,     9,
+		0,0, 0,0,   0,40,  11,0  };
+	threadNode *tree=createTree(1,arr);
+	print(tree);
+	createInThread(tree);
+	printf("\n");
+	printThreadTree(tree);
+	printf("\n");
+	postOrderPreNode(tree,0);
+	return 0;
+}
