@@ -1,0 +1,42 @@
+/*
+5.2.7，二：4
+将邻接表转换成邻接矩阵。
+*/
+const int MaxVertexNum 100
+//邻接表
+struct ArcNode{//边表结点
+	int adjvex;
+	struct ArcNode *next;
+};
+typedef struct VNode{//顶点表结点
+	int data;
+	ArcNode *first;
+}AdjList[MaxVertexNum];
+struct ALGraph{//邻接表
+	AdjList vertices;
+	int vexnum,arcnum;//顶点数和弧数
+}
+//邻接矩阵
+struct MGraph{
+	char vex[MaxVertexNum];//顶点表，顶点值的类型可以自己定
+	int edge[MaxVertexNum][MaxVertexNum];//邻接矩阵，边表
+	int vexnum,arcnum;//图的当前顶点数和弧数
+}
+//不管以上复杂的结构，直接用二维数组表示邻接矩阵，一维指针数组表示邻接表。
+struct adjNode{
+	int data;
+	struct adjNode *next;
+};
+//看答案，略有改动。
+int convert(adjNode adjg[],int arcs[][]){
+	//一维数组里第一个元素直接就为第一条边
+	int i,j;
+	adjNode *p;
+	for(i=0;i<MaxVertexNum;i++){
+		p=adjNode[i];
+		while(p){
+			arcs[i][p->data]=1;
+			p=p->next;
+		}
+	}
+}
